@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Student Management</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 40px 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .subtitle {
+            text-align: center;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 30px;
+            font-size: 1.1em;
+        }
+
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+
+        .card h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.3em;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        input {
+            padding: 10px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 0.95em;
+            flex: 1;
+            min-width: 150px;
+            transition: border-color 0.3s;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #667eea;
+        }
+
+        .btn-add {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95em;
+            font-weight: bold;
+            transition: transform 0.2s, box-shadow 0.2s;
+            white-space: nowrap;
+        }
+
+        .btn-add:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102,126,234,0.5);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead tr {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 14px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            color: #444;
+        }
+
+        tbody tr:hover {
+            background-color: #f8f7ff;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            background: #f0f0ff;
+            color: #667eea;
+            padding: 3px 10px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 6px 14px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.85em;
+            font-weight: bold;
+            transition: transform 0.2s;
+            display: inline-block;
+        }
+
+        .btn-delete:hover {
+            transform: translateY(-2px);
+        }
+
+        .empty-msg {
+            text-align: center;
+            color: #aaa;
+            padding: 40px;
+            font-size: 1.1em;
+        }
+
+        .stats {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px;
+            text-align: center;
+            flex: 1;
+        }
+
+        .stat-box .number {
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .stat-box .label {
+            font-size: 0.85em;
+            opacity: 0.85;
+        }
+		.btn-edit {
+		    background: linear-gradient(135deg, #f7971e, #ffd200);
+		    color: white;
+		    padding: 6px 14px;
+		    border: none;
+		    border-radius: 6px;
+		    cursor: pointer;
+		    text-decoration: none;
+		    font-size: 0.85em;
+		    font-weight: bold;
+		    transition: transform 0.2s;
+		    display: inline-block;
+		}
+		.btn-edit:hover { transform: translateY(-2px); }
+		.error-input {
+		    border-color: #ff6b6b !important;
+		    background: #fff5f5;
+		}
+
+		.error-msg {
+		    color: #ff6b6b;
+		    font-size: 0.8em;
+		    margin-top: 4px;
+		    display: block;
+		}
+    </style>
+</head>
+<body>
+<div class="container">
+
+    <h1>🎓 Student Management</h1>
+    <p class="subtitle">Manage your students easily</p>
+
+    <!-- Stats -->
+    <div class="stats">
+        <div class="stat-box">
+            <div class="number" th:text="${#lists.size(students)}">0</div>
+            <div class="label">Total Students</div>
+        </div>
+    </div>
+
+    <!-- Add Student Form -->
+	<!-- Add Student Form -->
+	<div class="card">
+	    <h2>➕ Add New Student</h2>
+	    <form th:action="@{/students/add}"
+	          th:object="${newStudent}"
+	          method="post">
+	        <div class="form-row">
+	            <div style="flex:1; min-width:150px;">
+	                <input type="text"
+	                       th:field="*{name}"
+	                       placeholder="Full Name"
+	                       th:classappend="${#fields.hasErrors('name')} ? 'error-input'"/>
+	                <small class="error-msg"
+	                       th:if="${#fields.hasErrors('name')}"
+	                       th:errors="*{name}"></small>
+	            </div>
+	            <div style="flex:1; min-width:150px;">
+	                <input type="email"
+	                       th:field="*{email}"
+	                       placeholder="Email Address"
+	                       th:classappend="${#fields.hasErrors('email')} ? 'error-input'"/>
+	                <small class="error-msg"
+	                       th:if="${#fields.hasErrors('email')}"
+	                       th:errors="*{email}"></small>
+	            </div>
+	            <div style="flex:1; min-width:100px;">
+	                <input type="number"
+	                       th:field="*{age}"
+	                       placeholder="Age"
+	                       th:classappend="${#fields.hasErrors('age')} ? 'error-input'"/>
+	                <small class="error-msg"
+	                       th:if="${#fields.hasErrors('age')}"
+	                       th:errors="*{age}"></small>
+	            </div>
+	            <div style="flex:1; min-width:150px;">
+	                <input type="tel"
+	                       th:field="*{phone}"
+	                       placeholder="Phone Number"
+	                       th:classappend="${#fields.hasErrors('phone')} ? 'error-input'"/>
+	                <small class="error-msg"
+	                       th:if="${#fields.hasErrors('phone')}"
+	                       th:errors="*{phone}"></small>
+	            </div>
+	            <button type="submit" class="btn-add">➕ Add</button>
+	        </div>
+	    </form>
+	</div>
+
+    <!-- Students Table -->
+	<div class="card">
+	    <h2>📋 All Students</h2>
+
+	    <!-- Search Box -->
+	    <form th:action="@{/students}" method="get" style="margin-bottom: 20px;">
+	        <div style="display:flex; gap:10px;">
+	            <input type="text"
+	                   name="search"
+	                   th:value="${search}"
+	                   placeholder="🔍 Search by name..."
+	                   style="flex:1;"/>
+	            <button type="submit" class="btn-add">Search</button>
+	            <a href="/students"
+	               class="btn-cancel"
+	               style="padding:10px 20px; background:#f0f0f0;
+	                      color:#555; border-radius:8px;
+	                      text-decoration:none; font-weight:bold;">
+	               Clear
+	            </a>
+	        </div>
+	    </form>
+
+	    <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Age</th>
+                    <th>Phone</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="student : ${students}">
+                    <td><span class="badge" th:text="${student.id}"></span></td>
+                    <td th:text="${student.name}"></td>
+                    <td th:text="${student.email}"></td>
+                    <td th:text="${student.age}"></td>
+                    <td th:text="${student.phone}"></td>
+					<td style="display:flex; gap:8px;">
+					    <a th:href="@{/students/edit/{id}(id=${student.id})}"
+					       class="btn-edit">
+					       ✏️ Edit
+					    </a>
+					    <a th:href="@{/students/delete/{id}(id=${student.id})}"
+					       class="btn-delete"
+					       onclick="return confirm('Delete this student?')">
+					       🗑 Delete
+					    </a>
+					</td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(students)}">
+                    <td colspan="6" class="empty-msg">
+                        No students yet. Add one above! 👆
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
